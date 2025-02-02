@@ -10,8 +10,8 @@
 
     <ItemGroup>
         <Folder Include="Commands\"/>
+        <Folder Include="ContainerBuilder\"/>
         <Folder Include="Resources\"/>
-        <Folder Include="Services\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,9 +19,16 @@
         <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0"/>
         <PackageReference Include="Caliburn.Micro" Version="5.0.181-beta"/>
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="JetBrains.Annotations" Version="2024.3.0"/>
         <PackageReference Include="MaterialDesignThemes" Version="5.2.2-ci893"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.1"/>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.1"/>
@@ -30,6 +37,9 @@
 
     <ItemGroup>
         <None Update="Resources\Images\backgroundtexture.png">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="appsettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>
     </ItemGroup>

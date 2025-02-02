@@ -3,9 +3,13 @@ using System.Windows;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Caliburn.Micro;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using PierceAuto.Client.DataAccess;
 using PierceAuto.Client.Framework;
+using PierceAuto.Client.Services.DataAccess;
 using PierceAuto.Client.Utils;
 using PierceAuto.Client.ViewModels;
 using IContainer = Autofac.IContainer;
@@ -44,12 +48,28 @@ internal class Bootstrapper : BootstrapperBase
         };
     }
 
+    private static IConfigurationRoot LoadConfigOptions()
+    {
+        return new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .Build();
+    }
+
     private async void ConfigureContainer()
     {
+        var configuration = LoadConfigOptions();
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddLogging(builder => { builder.AddConsole(); });
+
         var builder = new ContainerBuilder();
         builder.Populate(serviceCollection);
+
+        builder.Register(s =>
+        {
+            var options = new DbContextOptionsBuilder<PierceAutoDbContext>();
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            return new PierceAutoDbContext(options.Options);
+        }).As<PierceAutoDbContext>().InstancePerDependency();
 
         // Register the ViewModels
         builder.RegisterAssemblyTypes(AssemblySource.Instance.ToArray())
@@ -80,11 +100,15 @@ internal class Bootstrapper : BootstrapperBase
             .AsSelf()
             .InstancePerDependency();
 
+        builder.RegisterInstance(configuration).As<IConfiguration>().SingleInstance();
+        builder.RegisterType<PierceAutoDbContextFactory>().AsSelf().SingleInstance();
+
+        builder.RegisterType<ProductProvider>().SingleInstance();
+
         builder.RegisterType<WindowManager>().As<IWindowManager>();
         builder.RegisterType<EventAggregator>().As<IEventAggregator>();
-        builder.RegisterGeneric(typeof(LoggingAdapter<>)).AsSelf().InstancePerLifetimeScope();
+        builder.RegisterGeneric(typeof(LoggingAdapter<>)).AsSelf().SingleInstance();
 
-        builder.RegisterGeneric(typeof(ScreenBuilder<>)).AsSelf().InstancePerLifetimeScope();
         List<IWorkspace> workspaces = [];
         builder.RegisterInstance(workspaces).As<IEnumerable<IWorkspace>>().SingleInstance();
 

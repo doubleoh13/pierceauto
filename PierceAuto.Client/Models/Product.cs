@@ -1,8 +1,7 @@
 ﻿namespace PierceAuto.Client.Models;
 
-internal class Product
+internal class Product : IDomainModel
 {
-    public int Id { get; set; }
     public string SKU { get; set; }
     public string Description { get; set; }
     public Supplier Supplier { get; set; }
@@ -15,4 +14,5 @@ internal class Product
     public double ReorderPoint { get; set; }
     public bool IsInventoryControlled { get; set; }
     public bool IsActive { get; set; } = true;
+    public int Id { get; set; }
 }

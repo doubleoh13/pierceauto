@@ -3,12 +3,24 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:workspaceViewModels="clr-namespace:PierceAuto.Client.ViewModels.Workspaces"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300"
+             d:DataContext="{d:DesignInstance workspaceViewModels:InventoryWorkspaceViewModel}">
     <Grid>
-        <TabControl>
-            <TabItem Header="Master" />
-            <TabItem Header="1" />
-        </TabControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Button x:Name="StartNewProduct" Content="New Item" />
+        </Grid>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Products}" />
+        <ContentControl Grid.Row="2" x:Name="ActiveItem" />
     </Grid>
 </UserControl>
